@@ -20,20 +20,32 @@
     <ul id="product-list"></ul>
 
     <script>
-        function myFun() {
+        function deleteProduct(id) {
+            fetch(`/delete/${id}`, {
+                method: 'DELETE'
+            })
+            .then(res => res.json())
+            .then(result => {
+                console.log("deleted successfully");
+            })
+        }
+
+        function loadProducts() {
             fetch('http://localhost:3000/products')
                 .then(res => res.json())
                 .then(data => {
                     data.forEach(product => {
-                        const {name, price, quantity} = product;
+                        const {_id, name, price, quantity} = product;
                         const li = document.createElement('li');
-                        li.innerHTML = `${name} - Price: ${price} - Quantity: ${quantity}`;
+                        li.innerHTML = `${name} - 
+                            Price: ${price} - 
+                            Quantity: ${quantity} 
+                            <button onclick="deleteProduct('${_id}')">delete</button>`;
                         document.getElementById('product-list').appendChild(li);
                     })
                 });
         }
-
-        myFun();
+        loadProducts();
     </script>
 </body>
 </html>

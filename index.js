@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 const uri = "mongodb+srv://asif:asifratul@cluster0.efdix.mongodb.net/myDatabase?retryWrites=true&w=majority";
 
 const app = express();
@@ -43,19 +44,12 @@ client.connect(err => {
             })
     })    
 
-
-
-
-    // const product = {
-    //     name: "laptop",
-    //     price: 420,
-    //     quantity: 10
-    // };
-
-    // collection.insertOne(product)
-    //     .then(res => console.log("one product added"));
-
-    // console.log("Database connected");
+    app.delete('/delete/:id', (req, res) => {
+        db.deleteOne({_id: ObjectId(req.params.id)})
+            .then(result => {
+                console.log(result);
+            })
+    })
 });
 
 
