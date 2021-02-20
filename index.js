@@ -1,15 +1,15 @@
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 const bodyParser = require('body-parser');
-
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
+
 const uri = "mongodb+srv://asif:asifratul@cluster0.efdix.mongodb.net/myDatabase?retryWrites=true&w=majority";
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/bro', (req, res) => {
     res.send('Yoo Bro !!');
@@ -59,7 +59,7 @@ client.connect(err => {
         })
         .then(result => {
             console.log(result);
-            res.send(result);
+            res.send(result.modifiedCount > 0);
         })
     })
 

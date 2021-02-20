@@ -47,8 +47,12 @@
                 }
             })
             .then(res => res.json())
-            .then(data => {
+            .then(result => {
                 console.log('updated');
+                if(result) {
+                    loadAllProducts();
+                    document.getElementById('update').innerHTML = '';
+                }
             })
         }
 
@@ -73,6 +77,9 @@
             fetch('http://localhost:3000/products')
                 .then(res => res.json())
                 .then(data => {
+                    const container = document.getElementById('product-list');
+                    container.innerHTML = '';
+
                     data.forEach(product => {
                         const {_id, name, price, quantity} = product;
                         const li = document.createElement('li');
@@ -81,7 +88,7 @@
                             Quantity: ${quantity} 
                             <button onclick="loadSingleProduct('${_id}')">update</button>
                             <button onclick="deleteProduct(event, '${_id}')">delete</button>`;
-                        document.getElementById('product-list').appendChild(li);
+                        container.appendChild(li);
                     })
                 });
         }
