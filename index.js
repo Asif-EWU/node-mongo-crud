@@ -7,8 +7,9 @@ const ObjectId = require('mongodb').ObjectId;
 const uri = "mongodb+srv://asif:asifratul@cluster0.efdix.mongodb.net/myDatabase?retryWrites=true&w=majority";
 
 const app = express();
-// app.use(bodyParser.json());
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/bro', (req, res) => {
     res.send('Yoo Bro !!');
@@ -47,7 +48,7 @@ client.connect(err => {
         db.insertOne(product)
             .then(result => {
                 console.log("data added successfully");
-                res.send('success');
+                res.redirect('/');
             })
     })    
 
@@ -66,7 +67,7 @@ client.connect(err => {
         db.deleteOne({_id: ObjectId(req.params.id)})
             .then(result => {
                 console.log(result);
-                res.send(result);
+                res.send(result.deletedCount > 0);
             })
     })
 });

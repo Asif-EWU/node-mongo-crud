@@ -21,13 +21,16 @@
     <div id="update"></div>
 
     <script>
-        function deleteProduct(id) {
+        function deleteProduct(event, id) {
             fetch(`/delete/${id}`, {
                 method: 'DELETE'
             })
             .then(res => res.json())
             .then(result => {
                 console.log("deleted successfully");
+                if(result) {
+                    event.target.parentNode.style.display = 'none';
+                }
             })
         }
 
@@ -38,8 +41,10 @@
 
             fetch(`/update/${id}`, {
                 method: 'PATCH',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(product)
+                body: JSON.stringify(product),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
             })
             .then(res => res.json())
             .then(data => {
@@ -75,7 +80,7 @@
                             Price: ${price} - 
                             Quantity: ${quantity} 
                             <button onclick="loadSingleProduct('${_id}')">update</button>
-                            <button onclick="deleteProduct('${_id}')">delete</button>`;
+                            <button onclick="deleteProduct(event, '${_id}')">delete</button>`;
                         document.getElementById('product-list').appendChild(li);
                     })
                 });
