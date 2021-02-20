@@ -10,11 +10,11 @@ const app = express();
 // app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', (req, res) => {
+app.get('/bro', (req, res) => {
     res.send('Yoo Bro !!');
 })
 
-app.get('/file', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(__dirname + '/myFile.html');
 })
 
@@ -34,6 +34,13 @@ client.connect(err => {
         })
     })
 
+    app.get('/product/:id', (req, res) => {
+        db.find({_id: ObjectId(req.params.id)})
+        .toArray((err, documents) => {
+            res.send(documents[0]);
+        })
+    })
+
     app.post('/addProduct', (req, res) => {
         const product = req.body;
         
@@ -44,10 +51,22 @@ client.connect(err => {
             })
     })    
 
+    app.patch('/update/:id', (req, res) => {
+        db.updateOne({_id: ObjectId(req.params.id)},
+        {
+            $set: {price: req.body.price, quantity: req.body.quantity}
+        })
+        .then(result => {
+            console.log(result);
+            res.send(result);
+        })
+    })
+
     app.delete('/delete/:id', (req, res) => {
         db.deleteOne({_id: ObjectId(req.params.id)})
             .then(result => {
                 console.log(result);
+                res.send(result);
             })
     })
 });

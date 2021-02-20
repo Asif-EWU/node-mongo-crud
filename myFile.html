@@ -18,6 +18,7 @@
     <br><br>
     
     <ul id="product-list"></ul>
+    <div id="update"></div>
 
     <script>
         function deleteProduct(id) {
@@ -30,7 +31,40 @@
             })
         }
 
-        function loadProducts() {
+        function updateProduct(id) {
+            const price = document.getElementById('price').value;
+            const quantity = document.getElementById('quantity').value;
+            const product = {id, price, quantity};
+
+            fetch(`/update/${id}`, {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(product)
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('updated');
+            })
+        }
+
+        function loadSingleProduct(id) {
+            fetch(`/product/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    const {_id, name, price, quantity} = data;
+                    const update = document.getElementById('update');
+                    update.innerHTML = `
+                        <h3>Update: ${name}</h3>
+                        Price: <input type="text" value="${price}" id="price">
+                        <br>
+                        Quantity: <input type="text" value="${quantity}" id="quantity">
+                        <br>
+                        <button onclick="updateProduct('${_id}')">Submit</button>
+                    `;
+                })
+        }
+
+        function loadAllProducts() {
             fetch('http://localhost:3000/products')
                 .then(res => res.json())
                 .then(data => {
@@ -40,12 +74,13 @@
                         li.innerHTML = `${name} - 
                             Price: ${price} - 
                             Quantity: ${quantity} 
+                            <button onclick="loadSingleProduct('${_id}')">update</button>
                             <button onclick="deleteProduct('${_id}')">delete</button>`;
                         document.getElementById('product-list').appendChild(li);
                     })
                 });
         }
-        loadProducts();
+        loadAllProducts();
     </script>
 </body>
 </html>
